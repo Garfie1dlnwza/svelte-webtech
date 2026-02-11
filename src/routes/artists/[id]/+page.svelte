@@ -10,6 +10,6 @@
 	<p class="text-lg"><strong>Name:</strong> {artist.name}</p>
 
 	<div class="mt-4">
-		<a href="/artists" class="text-blue-500 hover:underline">&larr; Back to Artists List</a>
+		<a href="{artist.id}/edit" class="text-blue-500 hover:underline">แก้ไขข้อมูล</a>
 	</div>
 </div>

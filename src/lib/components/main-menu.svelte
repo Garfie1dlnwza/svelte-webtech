@@ -78,6 +78,7 @@
 			<li>
 				<a href="/" class={getLinkClass('/')}> Home </a>
 			</li>
+			
 			<li>
 				<a href="/contact" class={getLinkClass('/contact')}> Contact </a>
 			</li>
