@@ -43,7 +43,7 @@
 </script>
 
 <nav
-	class="sticky top-0 z-50 w-full border-b border-slate-200/50 bg-white/80 px-6 py-4 shadow-sm backdrop-blur-xl transition-all"
+	class="sticky dark:bg-slate-900 top-0 z-50 w-full border-b border-slate-200/50 bg-white/80 px-6 py-4 shadow-sm backdrop-blur-xl transition-all"
 >
 	<div class="mx-auto flex max-w-7xl items-center justify-between">
 		<a href="/" class="group flex items-center gap-2">
