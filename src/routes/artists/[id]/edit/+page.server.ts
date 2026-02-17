@@ -1,35 +1,39 @@
-import type { PageServerLoad, Actions } from './$types';
-import { apiClient } from '$lib/server/api-client';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { fail, error, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+import apiClient from '$lib/server/api-client.server';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const id = params.id;
-	const response = await apiClient.get(`/api/artists/${id}`);
 
-	if (response.status === 200) {
+	try {
+		const response = await apiClient.get(`/artists/${id}`);
 		return {
 			artist: response.data.data
 		};
+	} catch (err: any) {
+		throw error(404, 'ไม่พบข้อมูลศิลปิน');
 	}
-
-	throw error(404, 'Artist not found');
 };
 
 export const actions: Actions = {
 	default: async ({ request, params }) => {
 		const formData = await request.formData();
-		const name = formData.get('name');
 		const id = params.id;
 
+		formData.append('_method', 'PUT');
+
 		try {
-			await apiClient.put(`/api/artists/${id}`, {
-				name
-			});
-		} catch (err) {
-			console.error('Error updating artist:', err);
-			return fail(500, {
-				message: 'Failed to update artist'
-			});
+			await apiClient.post(`/artists/${id}`, formData);
+		} catch (err: any) {
+			if (err.response?.status === 422) {
+				const data = Object.fromEntries(formData);
+				delete data.image;
+
+				return fail(422, {
+					errors: err.response.data.errors,
+					data: data
+				});
+			}
 		}
 
 		throw redirect(303, `/artists/${id}`);

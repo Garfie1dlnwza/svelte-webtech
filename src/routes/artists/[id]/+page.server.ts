@@ -1,22 +1,37 @@
-import type { PageServerLoad } from './$types';
-import { apiClient } from '$lib/server/api-client';
+import { error, redirect, fail } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
+import apiClient from '$lib/server/api-client.server';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const id = params.id;
 
-	const response = await apiClient.get(`/api/artists/${id}`);
-	let artist = null;
 	try {
+		const response = await apiClient.get(`/artists/${id}`);
 		if (response.status === 200) {
-			artist = response.data.data;
+			return {
+				artist: response.data.data
+			};
 		}
 	} catch (err: any) {
-		if (err.response.status === 404) {
-			artist = null;
+		if (err.response.status == 404) {
+			error(404, {
+				message: `Artist ID ${id} Not Found`
+			});
+		} else {
+			throw err;
 		}
 	}
+};
 
-	return {
-		artist
-	};
+export const actions: Actions = {
+	delete: async ({ params }) => {
+		try {
+			await apiClient.delete(`/artists/${params.id}`);
+		} catch (err: any) {
+			return fail(500, {
+				message: 'ไม่สามารถลบข้อมูลได้ กรุณาลองใหม่'
+			});
+		}
+		throw redirect(303, '/artists');
+	}
 };
