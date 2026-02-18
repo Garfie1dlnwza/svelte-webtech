@@ -5,15 +5,23 @@
 </script>
 
 <div class="mx-auto max-w-3xl py-10">
-	<header class="mb-12">
-		<h1
-			class="mb-2 text-xs font-bold tracking-[0.2em] text-slate-400 uppercase dark:text-slate-500"
+	<header class="mb-12 flex items-center justify-between">
+		<div>
+			<h1
+				class="mb-2 text-xs font-bold tracking-[0.2em] text-slate-400 uppercase dark:text-slate-500"
+			>
+				Archive
+			</h1>
+			<h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+				Artists Index<span class="text-blue-600">.</span>
+			</h2>
+		</div>
+		<a
+			href="/artists/create"
+			class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
 		>
-			Archive
-		</h1>
-		<h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-			Artists Index<span class="text-blue-600">.</span>
-		</h2>
+			Create New Artist
+		</a>
 	</header>
 
 	<ul class="mb-12 divide-y divide-slate-100 dark:divide-slate-900">
