@@ -2,6 +2,7 @@
 	import type { PageProps } from './$types';
 	let { data }: PageProps = $props();
 	let artists = $derived(data.artists);
+	let pagination = $derived(data.pagination);
 </script>
 
 <div class="mx-auto max-w-3xl py-10">
@@ -58,6 +59,45 @@
 			</li>
 		{/each}
 	</ul>
+
+	{#if pagination}
+		<div
+			class="mt-8 flex items-center justify-between border-t border-slate-100 pt-8 dark:border-slate-800"
+		>
+			<p class="text-sm text-slate-500 dark:text-slate-400">
+				Showing <span class="font-medium text-slate-900 dark:text-white"
+					>{pagination.from || 0}</span
+				>
+				to
+				<span class="font-medium text-slate-900 dark:text-white">{pagination.to || 0}</span>
+				of
+				<span class="font-medium text-slate-900 dark:text-white">{pagination.total}</span>
+				results
+			</p>
+			<div class="flex gap-2">
+				<a
+					href={pagination.current_page > 1 ? `?page=${pagination.current_page - 1}` : '#'}
+					class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white {pagination.current_page <=
+					1
+						? 'pointer-events-none opacity-50'
+						: ''}"
+				>
+					Previous
+				</a>
+				<a
+					href={pagination.current_page < pagination.last_page
+						? `?page=${pagination.current_page + 1}`
+						: '#'}
+					class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white {pagination.current_page >=
+					pagination.last_page
+						? 'pointer-events-none opacity-50'
+						: ''}"
+				>
+					Next
+				</a>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>
