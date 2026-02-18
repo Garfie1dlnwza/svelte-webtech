@@ -1,122 +1,89 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { globalCounter } from '$lib/stores/counter.svelte';
-    import { onMount } from 'svelte';
-    import { theme } from '$lib/stores/theme.svelte';
-    import ThemeToggle from './theme-toggle.svelte';
+	import { onMount } from 'svelte';
+	import { theme } from '$lib/stores/theme.svelte';
+	import ThemeToggle from './theme-toggle.svelte';
 	let { brand } = $props();
 
 	function getLinkClass(path: string) {
 		const currentPath = $page.url.pathname;
-		const baseClass = 'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200';
-
 		const isActive = path === '/' ? currentPath === '/' : currentPath.startsWith(path);
 
-		const activeClass = isActive
-			? 'text-blue-700 bg-blue-100/50 shadow-sm ring-1 ring-blue-200'
-			: 'text-slate-500 hover:text-slate-900 hover:bg-white/50';
-
-		return `${baseClass} ${activeClass}`;
+		return `px-3 py-1.5 text-sm transition-colors duration-200 ${
+			isActive
+				? 'text-black dark:text-white font-medium'
+				: 'text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+		}`;
 	}
 
 	onMount(() => {
-		// ตรวจสอบว่า document มี class 'dark' หรือไม่ ถ้ามี ให้ set ที่ store/theme เป็น true
-		if (document.documentElement.classList.contains('dark')) {
-			theme.set(true);
-		} else {
-			theme.set(false); // ถ้าไม่มี ให้ set ที่ store/theme เป็น false
-		}
+		const isDark =
+			document.documentElement.classList.contains('dark') ||
+			localStorage.getItem('theme') === 'dark';
+		theme.set(isDark);
 	});
 
 	$effect(() => {
-		// ตรวจสอบว่า theme มีการเปลี่ยนค่าหรือไม่ ถ้ามีให้แสดงผลเป็น theme ที่เปลี่ยน และเก็บค่าที่ localStorage (สำหรับการ refresh หน้า)
-		const html = document.documentElement;
-
-		if (theme.isDark) {
-			html.classList.add('dark');
-			localStorage.setItem('theme', 'dark');
-		} else {
-			html.classList.remove('dark');
-			localStorage.setItem('theme', 'white');
-		}
+		const isDark = theme.isDark;
+		document.documentElement.classList.toggle('dark', isDark);
+		localStorage.setItem('theme', isDark ? 'dark' : 'light');
 	});
 </script>
 
 <nav
-	class="sticky dark:bg-slate-900 top-0 z-50 w-full border-b border-slate-200/50 bg-white/80 px-6 py-4 shadow-sm backdrop-blur-xl transition-all"
+	class="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/70 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/70"
 >
-	<div class="mx-auto flex max-w-7xl items-center justify-between">
+	<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
 		<a href="/" class="group flex items-center gap-2">
 			<div
-				class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md transition-transform group-hover:scale-105 group-hover:rotate-3"
+				class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 transition-transform group-hover:scale-95 dark:bg-white"
 			>
 				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="20"
-					height="20"
+					class="h-5 w-5 text-white dark:text-slate-900"
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
-					stroke-width="2.5"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="m2 17 10 5 10-5" /><path
-						d="m2 12 10 5 10-5"
-					/></svg
+					stroke-width="2"
 				>
+					<path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="m2 17 10 5 10-5" />
+				</svg>
 			</div>
-			<span
-				class="text-xl font-bold tracking-tight text-slate-800 transition-colors group-hover:text-blue-600"
-			>
+			<span class="text-sm font-bold tracking-widest text-slate-900 uppercase dark:text-white">
 				{brand}
 			</span>
 		</a>
 
-		<ul
-			class="hidden items-center gap-1 rounded-full border border-slate-200/60 bg-slate-50/50 p-1.5 backdrop-blur-sm md:flex"
-		>
-			<li>
-				<a href="/" class={getLinkClass('/')}> Home </a>
-			</li>
-			
-			<li>
-				<a href="/contact" class={getLinkClass('/contact')}> Contact </a>
-			</li>
-            <li>
-                <a href="/directory" class={getLinkClass('/directory')}> Directory </a>
-            </li>
-			<li>
-				<a href="/artists" class={getLinkClass('/artists')}> Artists </a>
-			</li>
-			<li>
-				<a href="/about" class={getLinkClass('/about')}> About </a>
-			</li>
-			<li>
-				<a href="/shop" class={getLinkClass('/shop')}> Shop </a>
-			</li>
-			<li>
-				<a href="/emoji-hub" class={getLinkClass('/emoji-hub')}> Emoji Hub </a>
-			</li>
+		<ul class="hidden items-center gap-2 md:flex">
+			<li><a href="/" class={getLinkClass('/')}>Home</a></li>
+			<li><a href="/directory" class={getLinkClass('/directory')}>Directory</a></li>
+			<li><a href="/artists" class={getLinkClass('/artists')}>Artists</a></li>
+			<li><a href="/shop" class={getLinkClass('/shop')}>Shop</a></li>
+			<li><a href="/emoji-hub" class={getLinkClass('/emoji-hub')}>Emoji Hub</a></li>
+			<li><a href="/contact" class={getLinkClass('/contact')}>Contact</a></li>
+			<li><a href="/add" class={getLinkClass('/add')}>Add</a></li>
 		</ul>
 
-		<div class="flex items-center gap-4">
+		<div class="flex items-center gap-6">
+			<div
+				class="hidden items-center gap-4 border-r border-slate-200 pr-6 md:flex dark:border-slate-800"
+			>
+				<ThemeToggle />
+				<span class="font-mono text-xs text-slate-400">Count:{globalCounter.count}</span>
+			</div>
+
 			<a
 				href="/login"
-				class="hidden text-sm font-semibold text-slate-500 hover:text-slate-900 md:block"
+				class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
 			>
 				Log in
 			</a>
 			<a
 				href="/signup"
-				class="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-lg active:translate-y-0"
+				class="rounded-full bg-slate-900 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
 			>
-				Sign up
+				Join
 			</a>
 		</div>
 	</div>
-
-	<div>
-		Counter: {globalCounter.count}
-	</div>
-	<ThemeToggle></ThemeToggle>
 </nav>

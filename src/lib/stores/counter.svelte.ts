@@ -16,6 +16,13 @@ class Counter {
 			localStorage.setItem('counter', this.count.toString());
 		}
 	}
+
+	decrement() {
+		this.count -= 1;
+		if (browser) {
+			localStorage.setItem('counter', this.count.toString());
+		}
+	}	
 }
 
 export const globalCounter = new Counter();

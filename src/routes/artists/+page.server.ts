@@ -11,5 +11,7 @@ export const load: PageServerLoad = async () => {
 				pagination: response.data.meta
 			};
 		}
-	} catch (err: any) {}
+	} catch (err) {
+		console.error('Error fetching artists:', err);
+	}
 };

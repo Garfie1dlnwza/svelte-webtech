@@ -54,9 +54,9 @@
         </div>
 
         <div>
-            <label for="image" class="block mb-1 font-medium">Profile Image</label>
-            
-            <div class="mb-3">
+            <!-- <label for="image" class="block mb-1 font-medium">Profile Image</label>
+             -->
+            <!-- <div class="mb-3">
                 {#if previewUrl}
                     <img src={previewUrl} alt="Preview" class="w-24 h-24 object-cover rounded-lg border" />
                 {:else}
@@ -74,7 +74,7 @@
             />
             {#if form?.errors?.image}
                 <p class="text-red-500 text-sm mt-1">{form.errors.image[0]}</p>
-            {/if}
+            {/if} -->
         </div>
 
         <button 
